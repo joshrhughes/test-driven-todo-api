@@ -96,9 +96,11 @@ app.delete('/api/todos/:id', function destroy(req, res) {
   /* This endpoint will delete a single todo with the
    * id specified in the route parameter (:id) and respond
    * with deleted todo.
-   */
+   */  
+
   let i = Number(req.params._id) - 1;
-  todos[i] = null;
+  todos.splice(i,1);
+  //todos[i] = null;
   res.json("Dropped it like its hot");
 
 });
