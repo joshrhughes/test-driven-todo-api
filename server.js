@@ -21,6 +21,7 @@ var todos = [
   { _id: 3, task: 'Homework', description: 'Make this app super awesome!' }
 ];
 
+var counter = 3;
 /**********
  * ROUTES *
  **********/
@@ -48,6 +49,8 @@ app.get('/api/todos/search', function search(req, res) {
   /* This endpoint responds with the search results from the
    * query in the request. COMPLETE THIS ENDPOINT LAST.
    */
+  res.json(todos);
+
 });
 
 app.get('/api/todos', function index(req, res) {
@@ -65,7 +68,8 @@ app.post('/api/todos', function create(req, res) {
    * and respond with the newly created todo.
    */
   var create = req.body;
-  req.body._id = ((todos.length) + 1);
+  req.body._id = counter + 1;
+  counter++;
  // console.log(create);
   todos.push(create);
   res.send(create);
@@ -75,7 +79,7 @@ app.get('/api/todos/:id', function show(req, res) {
   /* This endpoint will return a single todo with the
    * id specified in the route parameter (:id)
    */
-  res.send(todos[req.params.id - 1]);
+  res.json(todos[req.params.id-1]);
 });
 
 app.put('/api/todos/:id', function update(req, res) {
@@ -83,13 +87,14 @@ app.put('/api/todos/:id', function update(req, res) {
    * id specified in the route parameter (:id) and respond
    * with the newly updated todo.
    */
-  for (i = 0; i < todos.length; i++) {
-    if (todos[i]._id == req.body._id) {
+  // console.log("forloop about to start");
+  for (i = 0; i < todos.length; i++) { 
+    if (todos[i]._id == req.params.id) {
       todos[i].task = req.body.task;
       todos[i].description = req.body.description;
     }
-    res.send({todos: todos});
   }
+  res.send(todos[(req.params.id)-1]);
 });
 
 app.delete('/api/todos/:id', function destroy(req, res) {
@@ -98,12 +103,16 @@ app.delete('/api/todos/:id', function destroy(req, res) {
    * with deleted todo.
    */  
 
-  let i = Number(req.params._id) - 1;
-  todos.splice(i,1);
-  //todos[i] = null;
+  //let i = Number(req.params.id) - 1;
+  for (i = 0; i < todos.length; i++) {
+    if (todos[i]._id == req.params.id) {
+      console.log(i);
+      todos.splice(i,1);
+    }
+  }
   res.json("Dropped it like its hot");
-
 });
+
 
 /**********
  * SERVER *
